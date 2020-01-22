@@ -47,13 +47,22 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   File imageFile;
+  File imageFileDest;
 
   void openCamera() async {
     var picture = await ImagePicker.pickImage(source: ImageSource.camera);
     this.setState(() {
       imageFile = picture;
-      msgSucesso();
+      openGallery();
     });
+  }
+
+  void openGallery() async {
+    var picture = await ImagePicker.pickImage(source: ImageSource.gallery);
+    this.setState(() {
+      imageFileDest = picture;
+      msgSucesso();
+    }); 
   }
 
   void msgSucesso() {
