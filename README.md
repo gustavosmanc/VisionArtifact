@@ -1,16 +1,15 @@
-# projeto_genesis
+# Vision Artifact
 
-A new Flutter project.
+Projeto no qual é desenvolvida uma aplicação para o reconhecimento facial que será utilizada para a liberação de tratores em uma usina.
 
-## Getting Started
+## Introdução
 
-This project is a starting point for a Flutter application.
+Os arquivos neste repositório se tratam de todo o Front-End da aplicação, tendo sido utilizada a ferramenta Flutter.
 
-A few resources to get you started if this is your first Flutter project:
+Abaixo o meu contato:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+- [E-mail: gustavosmanc@gmail.com](gustavosmanc@gmail.com)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Caso tenha interesse na documentação da ferramenta Flutter, basta acessar a 
+[documentação online](https://flutter.dev/docs), que irá oferecer tutoriais,
+amostras, guias para o desenvolvimento mobile, etc...
