@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:starflut/starflut.dart';
 
 void main() => runApp(MyApp());
 
@@ -47,22 +48,69 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   File imageFile;
-  File imageFileDest;
+
+  Future<void> callPython() async {
+    StarCoreFactory starcore = await Starflut.getFactory();
+    StarServiceClass Service = await starcore.initSimple("test", "123", 0, 0, []);
+    await starcore.regMsgCallBackP(
+        (int serviceGroupID, int uMsg, Object wParam, Object lParam) async{
+      print("$serviceGroupID  $uMsg   $wParam   $lParam");
+      return null;
+    });
+    StarSrvGroupClass SrvGroup = await Service["_ServiceGroup"];
+
+    /*---script python--*/
+    bool isAndroid = await Starflut.isAndroid();
+    if( isAndroid == true ){
+      await Starflut.copyFileFromAssets("faceCheck.py", "flutter_assets/starfiles","flutter_assets/starfiles");
+      await Starflut.copyFileFromAssets("python3.6.zip", "flutter_assets/starfiles",null);  //desRelatePath must be null 
+      await Starflut.copyFileFromAssets("zlib.cpython-36m.so", null,null);
+      await Starflut.copyFileFromAssets("unicodedata.cpython-36m.so", null,null);
+      await Starflut.loadLibrary("libpython3.6m.so");
+    }
+
+    String docPath = await Starflut.getDocumentPath();
+    print("docPath = $docPath");
+
+    String resPath = await Starflut.getResourcePath();
+    print("resPath = $resPath");
+
+    dynamic rr1 = await SrvGroup.initRaw("python36", Service);
+
+    print("initRaw = $rr1");
+		var Result = await SrvGroup.loadRawModule("python", "", resPath + "/flutter_assets/starfiles/" + "testpy.py", false);
+    print("loadRawModule = $Result");
+
+		dynamic python = await Service.importRawContext("python", "", false, "");
+    print("python = "+ await python.getString());
+
+		StarObjectClass retobj = await python.call("tt", ["hello ", "world"]);
+    print(await retobj[0]);
+    print(await retobj[1]);
+
+    print(await python["g1"]);
+        
+    StarObjectClass yy = await python.call("yy", ["hello ", "world", 123]);
+    print(await yy.call("__len__",[]));
+
+    StarObjectClass multiply = await Service.importRawContext("python", "Multiply", true, "");
+    StarObjectClass multiply_inst = await multiply.newObject(["", "", 33, 44]);
+    print(await multiply_inst.getString());
+
+    print(await multiply_inst.call("multiply", [11, 22]));
+
+    await SrvGroup.clearService();
+		await starcore.moduleExit();
+  }
 
   void openCamera() async {
     var picture = await ImagePicker.pickImage(source: ImageSource.camera);
     this.setState(() {
       imageFile = picture;
-      openGallery();
+      if(imageFile != null) {
+        msgSucesso();
+      }
     });
-  }
-
-  void openGallery() async {
-    var picture = await ImagePicker.pickImage(source: ImageSource.gallery);
-    this.setState(() {
-      imageFileDest = picture;
-      msgSucesso();
-    }); 
   }
 
   void msgSucesso() {
